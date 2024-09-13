@@ -1,5 +1,6 @@
+import { ajoutListenersAvis } from "./avis.js";
 // Récupération des pièces depuis le fichier JSON
-const reponse = await fetch("pieces-autos.json");
+const reponse = await fetch("http://localhost:8081/pieces/");
 const pieces = await reponse.json();
 // for (let i=0; i<pieces.length; i++){
 //   const piecesElement =document.createElement("article")
@@ -50,7 +51,13 @@ function generation(pieces){
       descriptionElement.innerText = article.description ??("pas de description");
       const stockElement = document.createElement("p");
       stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock";
-      
+      //Code ajouté
+      const avisBouton = document.createElement("button");
+      avisBouton.dataset.id = article.id;
+      avisBouton.textContent = "Afficher les avis";          
+
+
+
       // On rattache la balise article a la section Fiches
       sectionFiches.appendChild(pieceElement);
       // On rattache l’image à pieceElement (la balise article)
@@ -61,10 +68,12 @@ function generation(pieces){
       //Ajout des éléments au DOM pour l'exercice
       pieceElement.appendChild(descriptionElement);
       pieceElement.appendChild(stockElement);
-
+      //avis button ajoute
+      pieceElement.appendChild(avisBouton);
 
 
           }
+          ajoutListenersAvis()
 }
 generation(pieces)
 /*trier les articles */ 
@@ -87,7 +96,7 @@ btndecro.addEventListener("click",function () {
   generation(pieces)
 })
 
-/*filtrer les article*/
+/*filtrer les article par une condition*/
 const btnFiltrer = document.querySelector(".btn-filtrer");
 btnFiltrer.addEventListener("click",()=>{
   const piecesFiltres = pieces.filter(function(piece){
@@ -106,7 +115,8 @@ discription.addEventListener("click",()=>{
   document.querySelector(".fiches").innerHTML = "";
   generation(piecesDiscription)
   
-} );
+} ); 
+/*pieces adorables*/
 const noms =pieces.map(piece =>piece.nom);
 for (let i=pieces.length-1 ;i>=0 ; i--){
   if(pieces[i].prix>35){
